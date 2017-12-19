@@ -17,7 +17,7 @@ acm-resover
 
 json的格式如下：
 
-```json
+```
 {
   problem_count: 10,
   solutions: {... },
