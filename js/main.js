@@ -8,6 +8,8 @@ function vuejs() {
     var RANKS_KEY = 'icpc-ranks';
     var OPER_FLAG_KEY = 'operation-flag';
 
+    var FLAHING_TIME = 100; //闪烁时间
+    var ROLLING_TIME = 1000; //排名上升时间
     window.Storage = {
         fetch: function(type) {
             if(type == 'ranks')
@@ -77,15 +79,15 @@ function vuejs() {
                         // vm.scrollToTop(op.old_rank, op_next.old_rank);
                         vm.$data.op_flag += 1;
                         vm.$data.op_status = true;
-                    }, 600);
-                }, 500);
+                    }, FLAHING_TIME + 100);
+                }, FLAHING_TIME);
             }else{
                 var old_pos_top = el_old.position().top;
                 var new_pos_top = el_new.position().top;
                 var distance = new_pos_top - old_pos_top;
                 var win_heigth = $(window).height();
                 if(Math.abs(distance) > win_heigth){
-                    distance = -(win_heigth);
+                    distance = -(win_heigth + 100);
                 }
                 var j = op.old_rank - 1;
                 var el_obj = [];
@@ -133,7 +135,7 @@ function vuejs() {
                     setTimeout(function(){ 
                         el_old
                             .css('position', 'relative')
-                            .animate({ top: distance+'px' }, 1500, function(){
+                            .animate({ top: distance+'px' }, ROLLING_TIME, function(){
                                 el_new.removeAttr('style');
                                 el_old.removeAttr('style');
                                 var ranks_tmp = $.extend(true, [], ranks);
@@ -157,11 +159,17 @@ function vuejs() {
                                     vm.$data.op_status = true;
                                 });
                             });
-
-                        el_obj.forEach(function(val,i){ el_obj[i].animate({'top': 106+'px',},1500); });
-                    }, 600);// two loop    
+                        for(var i = 0 ; i<el_obj.length ; ++i) {
+                            if(106*(i-1)<=win_heigth){
+                                el_obj[i].animate({'top': 106+'px'},ROLLING_TIME);
+                            }
+                            else {
+                                el_obj[i].css({'top': 106+'px'});
+                            }
+                        }
+                    }, FLAHING_TIME + 100);// two loop    
                     // };
-                }, 500);
+                }, FLAHING_TIME);
             }
         },
 
@@ -270,7 +278,7 @@ $.getJSON("contest2.json", function(data){
 
     document.onkeydown = function(event){
         var e = event || window.event || arguments.callee.caller.arguments[0];
-        if(e && e.keyCode == 37 && vm.$data.op_status){ // key left
+        if(e && e.keyCode == 37 /*&& vm.$data.op_status*/){ // key left
             Operation.back();
         }
         if(e && e.keyCode == 39 && vm.$data.op_status){ // key right
