@@ -67,15 +67,18 @@ user的格式，其中key即为user的id，要和solution中对上：
 ```
 1: {
   name: "花落人亡两不知",
-  college: "HZNU"
+  college: "HZNU",
+  is_exclude: true
 },
 2: {
   name: "大斌丶凸(♯｀∧´)凸",
-  college: "HDU"
+  college: "HDU",
+  is_exclude: false
 },
 3: {
   name: "天才少女队",
-  college: "PKU"
+  college: "PKU",
+  is_exclude: true
 },
 ```
 
