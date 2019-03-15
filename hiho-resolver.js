@@ -74,7 +74,6 @@ Resolver.prototype.calcOperations = function() {
 			}
 		}
 	}
-	
 	var uids = Object.keys(this.rank);
 	this.rank2 = [];
 	for(var key in uids) {
@@ -87,6 +86,18 @@ Resolver.prototype.calcOperations = function() {
 		}
 		return b.score - a.score;
 	});
+	var rnk = 0;
+	for (var i = 0; i < this.rank2.length; ++i) {
+		var user_id = this.rank2[i].user_id;
+		if (this.users[user_id].is_exclude === true) {
+			this.rank2[i].rank_show = "*";
+			this.rank[user_id].rank_show = "*";
+		} else {
+			rnk++;
+			this.rank2[i].rank_show = rnk;
+			this.rank[user_id].rank_show = rnk;
+		}
+	}
 	//this.rank2.length = 200;
 	this.rank_frozen = $.extend(true, [], this.rank2);
 	for(var i = this.rank2.length - 1; i >= 0; i--) {
@@ -107,6 +118,8 @@ Resolver.prototype.calcOperations = function() {
 						new_submissions: this.rank2[i].problem[j].new_submissions,
 						old_rank: i,
 						new_rank: -1,
+						old_rank_show: this.rank2[i].rank_show,
+						new_rank_show: -1,
 						old_penalty: this.rank2[i].problem[j].old_penalty,
 						new_penalty: this.rank2[i].problem[j].new_penalty
 					};
@@ -119,11 +132,16 @@ Resolver.prototype.calcOperations = function() {
 					tmp.problem[j].new_verdict = "NA";
 					var k = i -1;
 					while(k >= 0 && (this.rank2[k].score < tmp.score || this.rank2[k].score == tmp.score && this.rank2[k].penalty > tmp.penalty)) {
+						if (tmp.rank_show !== "*" && this.rank2[k].rank_show !== "*") {
+							tmp.rank_show--;
+							this.rank2[k].rank_show++;
+						}
 						this.rank2[k+1] = this.rank2[k];
 						k--;
 					}
 					this.rank2[k+1] = tmp;
 					op.new_rank = k+1;
+					op.new_rank_show = tmp.rank_show;
 					this.operations.push(op);
 					break;
 				}

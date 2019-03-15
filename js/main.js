@@ -33,6 +33,7 @@ function vuejs() {
             var op_length = vm.$data.operations.length - 1;
             if(vm.$data.op_flag < op_length)
                 var op_next = vm.$data.operations[vm.$data.op_flag+1];
+            console.log(op);
             var ranks = vm.$data.ranks;
             var rank_old = ranks[op.old_rank];
 
@@ -93,6 +94,7 @@ function vuejs() {
                 var el_obj = [];
                 for(j; j >= op.new_rank; j--){
                     var el = $('#rank-'+ j);
+                    el.rank_obj = ranks[j];
                     el_obj.push(el);
                 }
                 setTimeout(function(){
@@ -100,6 +102,8 @@ function vuejs() {
                         // 修改原始数据
                         if(op.new_verdict == 'AC'){
                             rank_old.score += 1;
+                            rank_old.rank_show = op.new_rank_show;
+                            console.log("new_rank_show" + op.new_rank_show);
                             rank_old.penalty += op.new_penalty;
                             rank_old.problem[op.problem_index].old_penalty = op.new_penalty;
                         }
@@ -125,10 +129,15 @@ function vuejs() {
                                 .find('.p-'+op.problem_index).addClass('uncover')
                                 .find('.p-content').removeClass('uncover');
                             //修改排名
-                            el_old.find('.rank').text(op.new_rank+1);
+                            el_old.find('.rank').text(op.new_rank_show);
                             el_obj.forEach(function(val,i){ 
                                 var dom_rank = el_obj[i].find('.rank');
-                                dom_rank.text(Number(dom_rank.text())+1);
+                                var dom_rank_old = el_old.find('.rank');
+                                if (dom_rank.text() !== "*" && dom_rank_old.text() !== "*") {
+                                    var new_rank_show = Number(dom_rank.text())+1;
+                                    dom_rank.text(new_rank_show);
+                                    el_obj[i].rank_obj.rank_show = new_rank_show; 
+                                }
                             });
                         });
 

@@ -28,7 +28,7 @@
         <!-- page content -->
         <div class="rank-list">
             <div id="rank-{{$index}}" class="rank-list-item clearfix" v-for="team in ranks" track-by="user_id">
-                <div class="rank">{{ $index+1 }}</div>
+                <div class="rank">{{ team.rank_show }}</div>
                 <div class="content">
                     <div class="name">{{ users[team.user_id].college }}--{{ users[team.user_id].name }}</div>
                     <ul class="problems">
