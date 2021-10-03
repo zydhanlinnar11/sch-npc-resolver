@@ -47,44 +47,44 @@ function vuejs() {
       if (op.new_rank == op.old_rank) {
         if (vm.$data.op_flag < op_length)
           var el_old_next = $('#rank-' + op_next.old_rank)
+        // setTimeout(function () {
+        if (op.new_verdict == 'AC') {
+          rank_old.score += 1
+          rank_old.penalty += op.new_penalty
+          rank_old.problem[op.problem_index].old_penalty = op.new_penalty
+        }
+        rank_old.problem[op.problem_index].old_verdict = op.new_verdict
+        rank_old.problem[op.problem_index].new_verdict = 'NA'
+
+        //if(op.new_submissions > 0) {
+        if (op.new_verdict == 'AC') {
+          rank_old.problem[op.problem_index].old_submissions =
+            op.new_submissions
+          rank_old.problem[op.problem_index].frozen_submissions = 0
+          rank_old.problem[op.problem_index].new_submissions = 0
+        } else {
+          rank_old.problem[op.problem_index].old_submissions +=
+            op.frozen_submissions
+          rank_old.problem[op.problem_index].frozen_submissions = 0
+          rank_old.problem[op.problem_index].new_submissions = 0
+        }
+        Vue.nextTick(function () {
+          el_old
+            .find('.problem-' + op.problem_index)
+            .addClass('uncover')
+            .find('.p-content')
+            .removeClass('uncover')
+        })
+
         setTimeout(function () {
-          if (op.new_verdict == 'AC') {
-            rank_old.score += 1
-            rank_old.penalty += op.new_penalty
-            rank_old.problem[op.problem_index].old_penalty = op.new_penalty
-          }
-          rank_old.problem[op.problem_index].old_verdict = op.new_verdict
-          rank_old.problem[op.problem_index].new_verdict = 'NA'
-
-          //if(op.new_submissions > 0) {
-          if (op.new_verdict == 'AC') {
-            rank_old.problem[op.problem_index].old_submissions =
-              op.new_submissions
-            rank_old.problem[op.problem_index].frozen_submissions = 0
-            rank_old.problem[op.problem_index].new_submissions = 0
-          } else {
-            rank_old.problem[op.problem_index].old_submissions +=
-              op.frozen_submissions
-            rank_old.problem[op.problem_index].frozen_submissions = 0
-            rank_old.problem[op.problem_index].new_submissions = 0
-          }
-          Vue.nextTick(function () {
-            el_old
-              .find('.problem-' + op.problem_index)
-              .addClass('uncover')
-              .find('.p-content')
-              .removeClass('uncover')
-          })
-
-          setTimeout(function () {
-            vm.selected(el_old, 'remove')
-            if (vm.$data.op_flag < op_length) vm.selected(el_old_next, 'add')
-            el_old.find('.problem-' + op.problem_index).removeClass('uncover')
-            // vm.scrollToTop(op.old_rank, op_next.old_rank);
-            vm.$data.op_flag += 1
-            vm.$data.op_status = true
-          }, FLAHING_TIME + 100)
-        }, FLAHING_TIME)
+          vm.selected(el_old, 'remove')
+          if (vm.$data.op_flag < op_length) vm.selected(el_old_next, 'add')
+          el_old.find('.problem-' + op.problem_index).removeClass('uncover')
+          // vm.scrollToTop(op.old_rank, op_next.old_rank);
+          vm.$data.op_flag += 1
+          vm.$data.op_status = true
+        }, FLAHING_TIME + 100)
+        // }, FLAHING_TIME)
       } else {
         var old_pos_top = el_old.position().top
         var new_pos_top = el_new.position().top
@@ -100,96 +100,93 @@ function vuejs() {
           el.rank_obj = ranks[j]
           el_obj.push(el)
         }
-        setTimeout(function () {
-          // return function(){
-          // 修改原始数据
-          if (op.new_verdict == 'AC') {
-            rank_old.score += 1
-            rank_old.rank_show = op.new_rank_show
-            rank_old.penalty += op.new_penalty
-            rank_old.problem[op.problem_index].old_penalty = op.new_penalty
-          }
-          rank_old.problem[op.problem_index].old_verdict = op.new_verdict
-          rank_old.problem[op.problem_index].new_verdict = 'NA'
+        // setTimeout(function () {
+        // return function(){
+        // 修改原始数据
+        if (op.new_verdict == 'AC') {
+          rank_old.score += 1
+          rank_old.rank_show = op.new_rank_show
+          rank_old.penalty += op.new_penalty
+          rank_old.problem[op.problem_index].old_penalty = op.new_penalty
+        }
+        rank_old.problem[op.problem_index].old_verdict = op.new_verdict
+        rank_old.problem[op.problem_index].new_verdict = 'NA'
 
-          //if(op.new_submissions > 0) {
-          if (op.new_verdict == 'AC') {
-            rank_old.problem[op.problem_index].old_submissions =
-              op.new_submissions
-            rank_old.problem[op.problem_index].frozen_submissions = 0
-            rank_old.problem[op.problem_index].new_submissions = 0
-          } else {
-            rank_old.problem[op.problem_index].old_submissions +=
-              op.frozen_submissions
-            rank_old.problem[op.problem_index].frozen_submissions = 0
-            rank_old.problem[op.problem_index].new_submissions = 0
-            alert(rank_old.problem[op.problem_index].old_submissions)
-          }
-          //
-          Vue.nextTick(function () {
-            //添加揭晓题目闪动效果
-            el_old
-              .find('.problem-' + op.problem_index)
-              .addClass('uncover')
-              .find('.p-content')
-              .removeClass('uncover')
-            //修改排名
-            el_old.find('.rank').text(op.new_rank_show)
-            el_obj.forEach(function (val, i) {
-              var dom_rank = el_obj[i].find('.rank')
-              var dom_rank_old = el_old.find('.rank')
-              if (dom_rank.text() !== '*' && dom_rank_old.text() !== '*') {
-                var new_rank_show = Number(dom_rank.text()) + 1
-                dom_rank.text(new_rank_show)
-                el_obj[i].rank_obj.rank_show = new_rank_show
-              }
+        //if(op.new_submissions > 0) {
+        if (op.new_verdict == 'AC') {
+          rank_old.problem[op.problem_index].old_submissions =
+            op.new_submissions
+          rank_old.problem[op.problem_index].frozen_submissions = 0
+          rank_old.problem[op.problem_index].new_submissions = 0
+        } else {
+          rank_old.problem[op.problem_index].old_submissions +=
+            op.frozen_submissions
+          rank_old.problem[op.problem_index].frozen_submissions = 0
+          rank_old.problem[op.problem_index].new_submissions = 0
+          alert(rank_old.problem[op.problem_index].old_submissions)
+        }
+        //
+        Vue.nextTick(function () {
+          //添加揭晓题目闪动效果
+          el_old
+            .find('.problem-' + op.problem_index)
+            .addClass('uncover')
+            .find('.p-content')
+            .removeClass('uncover')
+          //修改排名
+          el_old.find('.rank').text(op.new_rank_show)
+          el_obj.forEach(function (val, i) {
+            var dom_rank = el_obj[i].find('.rank')
+            var dom_rank_old = el_old.find('.rank')
+            if (dom_rank.text() !== '*' && dom_rank_old.text() !== '*') {
+              var new_rank_show = Number(dom_rank.text()) + 1
+              dom_rank.text(new_rank_show)
+              el_obj[i].rank_obj.rank_show = new_rank_show
+            }
+          })
+        })
+
+        // setTimeout(function () {
+        el_old
+          .css('position', 'relative')
+          .animate({ top: distance + 'px' }, ROLLING_TIME, function () {
+            el_new.removeAttr('style')
+            el_old.removeAttr('style')
+            var ranks_tmp = $.extend(true, [], ranks)
+            var data_old = ranks_tmp[op.old_rank]
+            var i = op.old_rank - 1
+            for (i; i >= op.new_rank; i--) {
+              ranks_tmp[i + 1] = ranks_tmp[i]
+            }
+            ranks_tmp[op.new_rank] = data_old
+            vm.$set('ranks', ranks_tmp)
+            Vue.nextTick(function () {
+              el_obj.forEach(function (val, i) {
+                el_obj[i].removeAttr('style')
+              })
+              el_old.find('.problem-' + op.problem_index).removeClass('uncover')
+              if (vm.$data.op_flag < op_length)
+                var el_old_next = $('#rank-' + op_next.old_rank)
+              vm.selected(el_old, 'remove')
+              if (vm.$data.op_flag < op_length) vm.selected(el_old_next, 'add')
+              // vm.scrollToTop(op.old_rank, op.new_rank);
+              vm.$data.op_flag += 1
+              vm.$data.op_status = true
             })
           })
-
-          setTimeout(function () {
-            el_old
-              .css('position', 'relative')
-              .animate({ top: distance + 'px' }, ROLLING_TIME, function () {
-                el_new.removeAttr('style')
-                el_old.removeAttr('style')
-                var ranks_tmp = $.extend(true, [], ranks)
-                var data_old = ranks_tmp[op.old_rank]
-                var i = op.old_rank - 1
-                for (i; i >= op.new_rank; i--) {
-                  ranks_tmp[i + 1] = ranks_tmp[i]
-                }
-                ranks_tmp[op.new_rank] = data_old
-                vm.$set('ranks', ranks_tmp)
-                Vue.nextTick(function () {
-                  el_obj.forEach(function (val, i) {
-                    el_obj[i].removeAttr('style')
-                  })
-                  el_old
-                    .find('.problem-' + op.problem_index)
-                    .removeClass('uncover')
-                  if (vm.$data.op_flag < op_length)
-                    var el_old_next = $('#rank-' + op_next.old_rank)
-                  vm.selected(el_old, 'remove')
-                  if (vm.$data.op_flag < op_length)
-                    vm.selected(el_old_next, 'add')
-                  // vm.scrollToTop(op.old_rank, op.new_rank);
-                  vm.$data.op_flag += 1
-                  vm.$data.op_status = true
-                })
-              })
-            for (var i = 0; i < el_obj.length; ++i) {
-              if (el_obj[i].outerHeight() * (i - 1) <= win_heigth) {
-                el_obj[i].animate(
-                  { top: el_obj[i].outerHeight() + 'px' },
-                  ROLLING_TIME
-                )
-              } else {
-                el_obj[i].css({ top: el_obj[i].outerHeight() + 'px' })
-              }
-            }
-          }, FLAHING_TIME + 100) // two loop
-          // };
-        }, FLAHING_TIME)
+        for (var i = 0; i < el_obj.length; ++i) {
+          if (el_obj[i].outerHeight() * (i - 1) <= win_heigth) {
+            el_obj[i].animate(
+              { top: el_obj[i].outerHeight() + 'px' },
+              ROLLING_TIME
+            )
+          } else {
+            el_obj[i].css({ top: el_obj[i].outerHeight() + 'px' })
+          }
+        }
+        // }, FLAHING_TIME + 100) // two loop
+        // };
+        // }, FLAHING_TIME)
       }
     },
 
