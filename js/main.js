@@ -264,7 +264,7 @@ function vuejs() {
           var el_pos = el.position().top
           var offset = el_pos - document.getElementById('navbar').offsetHeight
           const element = document.getElementById('rank-1')
-          if (element) offset -= element.offsetHeight
+          if (element) offset -= element.offsetHeight * 3
           window.scroll({
             top: offset,
             behavior: 'smooth',
