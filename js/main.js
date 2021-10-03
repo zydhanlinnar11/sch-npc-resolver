@@ -178,10 +178,13 @@ function vuejs() {
                 })
               })
             for (var i = 0; i < el_obj.length; ++i) {
-              if (106 * (i - 1) <= win_heigth) {
-                el_obj[i].animate({ top: 106 + 'px' }, ROLLING_TIME)
+              if (el_obj[i].outerHeight() * (i - 1) <= win_heigth) {
+                el_obj[i].animate(
+                  { top: el_obj[i].outerHeight() + 'px' },
+                  ROLLING_TIME
+                )
               } else {
-                el_obj[i].css({ top: 106 + 'px' })
+                el_obj[i].css({ top: el_obj[i].outerHeight() + 'px' })
               }
             }
           }, FLAHING_TIME + 100) // two loop

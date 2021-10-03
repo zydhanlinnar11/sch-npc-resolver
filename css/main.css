@@ -106,3 +106,7 @@
 .penalty {
   width: 100px;
 }
+
+.rank-list-item {
+  position: relative;
+}
