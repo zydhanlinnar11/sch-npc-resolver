@@ -1,6 +1,6 @@
 const DOMJUDGE_URL = 'https://senior.schematics-npc.com'
 const CONTEST_API_URI = '/api/v4/contests'
-const CONTEST_ID = '4' // Penyisihan
+const CONTEST_ID = '5' // Penyisihan
 const JUDGEMENTS = `/judgements.json`
 
 async function getJSONFromAPI(url) {
